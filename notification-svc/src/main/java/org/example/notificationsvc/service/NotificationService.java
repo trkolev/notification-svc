@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -49,6 +51,12 @@ public class NotificationService {
                     .status(500)
                     .body("Internal error: " + smsRequest.getPhoneNumber());
         }
+
+    }
+
+    public List<Notification> findAllBySenderId(UUID senderId) {
+
+        return notificationRepository.findAllByUserId(senderId);
 
     }
 }
