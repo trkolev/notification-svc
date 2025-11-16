@@ -27,7 +27,7 @@ public class NotificationController {
     }
 
     @GetMapping("/sms")
-    public ResponseEntity<List<Notification>> getAllSmsBySender(@RequestParam UUID senderId) {
+    public ResponseEntity<List<Notification>> getAllSmsBySender(@RequestParam("userId") UUID senderId) {
 
         List<Notification> allBySenderId = notificationService.findAllBySenderId(senderId);
 
