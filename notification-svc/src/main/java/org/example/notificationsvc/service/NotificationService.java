@@ -37,15 +37,19 @@ public class NotificationService {
                 .build();
 
         try {
-
             smsService.sendNotification(smsRequest.getPhoneNumber(), smsRequest.getMessage());
+            notificationRepository.save(notification);
             return ResponseEntity.ok("SMS sent to " + smsRequest.getPhoneNumber());
         }catch (ApiException e){
+            notification.setStatus(NotificationStatus.FAILED);
+            notificationRepository.save(notification);
             log.error("Twilio API error: " + e.getMessage());
             return ResponseEntity
                     .status(400)
                     .body("Failed to send SMS to " + smsRequest.getPhoneNumber());
         }catch (Exception e){
+            notification.setStatus(NotificationStatus.FAILED);
+            notificationRepository.save(notification);
             log.error("Twilio exception: " + e.getMessage());
             return ResponseEntity
                     .status(500)
