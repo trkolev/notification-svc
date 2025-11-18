@@ -31,9 +31,11 @@ public class Notification {
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private NotificationStatus status;
 
     @Column(nullable = false)
     private UUID userId;
 
+    private boolean isDeleted;
 }

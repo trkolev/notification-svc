@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Slf4j
 @Service
@@ -34,20 +35,21 @@ public class NotificationService {
                 .createdAt(LocalDateTime.now())
                 .status(NotificationStatus.SUCCEEDED)
                 .userId(smsRequest.getSenderId())
+                .isDeleted(false)
                 .build();
 
         try {
             smsService.sendNotification(smsRequest.getPhoneNumber(), smsRequest.getMessage());
             notificationRepository.save(notification);
             return ResponseEntity.ok("SMS sent to " + smsRequest.getPhoneNumber());
-        }catch (ApiException e){
+        } catch (ApiException e) {
             notification.setStatus(NotificationStatus.FAILED);
             notificationRepository.save(notification);
             log.error("Twilio API error: " + e.getMessage());
             return ResponseEntity
                     .status(400)
                     .body("Failed to send SMS to " + smsRequest.getPhoneNumber());
-        }catch (Exception e){
+        } catch (Exception e) {
             notification.setStatus(NotificationStatus.FAILED);
             notificationRepository.save(notification);
             log.error("Twilio exception: " + e.getMessage());
@@ -60,7 +62,16 @@ public class NotificationService {
 
     public List<Notification> findAllBySenderId(UUID senderId) {
 
-        return notificationRepository.findAllByUserId(senderId);
+        return notificationRepository.findAllByUserIdAndIsDeletedIsFalse(senderId);
 
+
+    }
+
+    public void deleteAllBySenderId(UUID senderId) {
+
+        notificationRepository.findAllByUserIdAndIsDeletedIsFalse(senderId).forEach(notification -> {
+            notification.setDeleted(true);
+            notificationRepository.save(notification);
+        });
     }
 }

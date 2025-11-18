@@ -34,4 +34,11 @@ public class NotificationController {
         return ResponseEntity.ok(allBySenderId);
     }
 
+    @DeleteMapping("/sms")
+    public ResponseEntity<Void> deleteAllSmsBySender(@RequestParam("userId") UUID senderId) {
+
+        notificationService.deleteAllBySenderId(senderId);
+
+        return ResponseEntity.ok().body(null);
+    }
 }
