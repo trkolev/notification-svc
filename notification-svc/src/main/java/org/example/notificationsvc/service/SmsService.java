@@ -11,9 +11,7 @@ public class SmsService {
     @Value("${twilio.phone-number}")
     private String phoneNumber;
 
-    public void sendNotification(String number, String message){
-
+    public void sendNotification(String number, String message) {
         Message.creator(new PhoneNumber(number), new PhoneNumber(phoneNumber), message).create();
-
     }
 }

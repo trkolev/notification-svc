@@ -1,5 +1,6 @@
 package org.example.notificationsvc.web;
 
+import jakarta.validation.Valid;
 import org.example.notificationsvc.model.Notification;
 import org.example.notificationsvc.service.NotificationService;
 import org.example.notificationsvc.web.dto.SmsRequest;
@@ -20,25 +21,19 @@ public class NotificationController {
     }
 
     @PostMapping("/sms")
-    public ResponseEntity<String> sendSms(@RequestBody SmsRequest smsRequest) {
-
+    public ResponseEntity<String> sendSms(@Valid @RequestBody SmsRequest smsRequest) {
         return notificationService.sendSms(smsRequest);
-
     }
 
     @GetMapping("/sms")
     public ResponseEntity<List<Notification>> getAllSmsBySender(@RequestParam("userId") UUID senderId) {
-
         List<Notification> allBySenderId = notificationService.findAllBySenderId(senderId);
-
         return ResponseEntity.ok(allBySenderId);
     }
 
     @DeleteMapping("/sms")
     public ResponseEntity<Void> deleteAllSmsBySender(@RequestParam("userId") UUID senderId) {
-
         notificationService.deleteAllBySenderId(senderId);
-
         return ResponseEntity.ok().body(null);
     }
 }

@@ -1,12 +1,10 @@
 package org.example.notificationsvc.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 
 @Builder
 @Getter
